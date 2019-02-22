@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script>
+        $(function () {
+            $('#first').click(function () {
+                if ($('#second').is(':hidden')) {
+                    $('#second').show(1000);
+                } else {
+                    $('#second').hide(1000);
+                }
+            })
+        })
+    </script>
+</head>
+<body>
+    <p id="first">Просто жук</p>
+    <p id="second">Не просто жук</p>
+</body>
+</html>

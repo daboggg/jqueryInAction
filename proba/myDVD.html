@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script>
+        $(function () {
+            var $filters = $('#filters');
+            var $cloneOpt = $('option', 'div.template.template-chooser select');
+            var optionLen = $('div.template.template-chooser select').length;
+            var movies;
+            $.getJSON('movies.json', function (data) {
+                movies = data;
+                $(document).trigger('moviesLoaded');
+            });
+
+            $(document).on('moviesLoaded', function () {
+
+                $filters.on('click', 'input[type="button"]', function (event) {
+                    $(event.target).parent().remove();
+                    selectCtrl();
+                });
+
+
+                $filters.on('change', 'select[name="filter"]', function (event) {
+                    // удаляет уже содержащийся фильтр
+                    $(event.target).siblings('.filter').remove();
+
+                    var selectedData = $(':selected', event.target).data('template-type');
+
+                    $('div.template.' + selectedData)
+                        .clone()
+                        .removeClass()
+                        .addClass('filter filter' + selectedData.slice(selectedData.indexOf("-")))
+                        .appendTo($(event.target).parent());
+
+                    selectCtrl();
+                });
+
+
+                $('#filter-add').click(function () {
+
+                    if ($('.filter-chooser', $filters).length > $cloneOpt.length - 2) return;
+                    $('div.template.template-chooser')
+                        .clone()
+                        .removeClass()
+                        .addClass('filter-chooser')
+                        .appendTo($filters);
+                    // alert($cloneOpt.length);
+                });
+
+                function selectCtrl() {
+                    var item = [];
+                    var delItem = $('#filters .filter');
+                    for (var i = 0; i < delItem.length; i++) {
+                        var a = $(delItem[i]).attr('class');
+                        item.push(a.slice(a.lastIndexOf("-") + 1));
+                    }
+
+                    var $zzxx = $cloneOpt
+                        .clone()
+                        .filter(function (idx, elem) {
+                            for (var i = 0; i < item.length; i++) {
+                                if ($(elem).attr('value') === item[i]) {
+                                    return false;
+                                }
+                            }
+                            return true;
+                        });
+
+                    $('select[name="filter"]').empty().append($zzxx);
+                }
+
+                $('#filter-apply').click(function () {
+                    $('tr:has(td)', '#table-result').remove();
+                    var yearMin = parseInt($filters.find('input[name="year-min"]').val(), 10);
+                    var yearMax = parseInt($filters.find('input[name="year-max"]').val(), 10);
+                    var bindMin = parseInt($filters.find('input[name="binder-min"]').val(), 10);
+                    var bindMax = parseInt($filters.find('input[name="binder-max"]').val(), 10);
+                    var titleСondition = $filters.find('select[name="title-condition"]').val();
+                    var title = $filters.find('input[name="title"]').val();
+                    var viewed = $filters.find('input[name="viewed"]:checked').val();
+                    // alert(titleСondition);
+                    // alert(title);
+                    // alert(viewed);
+
+                    var results = $.grep(movies, function (element, index) {
+                        return (isNaN(yearMin) || element.year >= yearMin) && (isNaN(yearMax) || element.year <= yearMax) &&
+                            (isNaN(bindMin) || element.binder >= bindMin) && (isNaN(bindMax) || element.binder <= bindMax) &&
+                            (viewed===undefined||element.viewed===(viewed==='true'))&&
+
+                            (
+                                (titleСondition === undefined && title === undefined) ||
+                                (titleСondition === "contains" && element.title.indexOf(title) >= 0) ||
+                                (titleСondition === "starts-with" && element.title.indexOf(title) === 0) ||
+                                (titleСondition === "ends-with" && (element.title.lastIndexOf(title) >= 0 && element.title.lastIndexOf(title) === element.title.length - title.length)) ||
+                                (titleСondition === "equals" && element.title === title)
+
+
+                            );
+                    })
+                    var row;
+                    for (var i = 0; i < results.length; i++) {
+                        row = "<td>" + results[i].title + "</td>"
+                        row += "<td>" + results[i].year + "</td>"
+                        row += "<td>" + results[i].binder + "</td>"
+                        row += "<td>" + results[i].page + "</td>"
+                        row += "<td>" + results[i].slot + "</td>"
+                        row += "<td>" + (results[i].viewed?'Да':'Нет') + "</td>"
+                        $('<tr>').html(row).appendTo('#table-result');
+                    }
+                });
+
+            });
+
+
+        });
+    </script>
+</head>
+<body>
+<div class="templates" style="display: none">
+    <div class="template template-chooser">
+        <input type="button" class="filter-remover" value="X"/>
+        <select name="filter" class="filter-type">
+            <option value="" data-template-type="" selected="selected">Выберете фильтр</option>
+            <option value="bind" data-template-type="template-bind">Бинд</option>
+            <option value="year" data-template-type="template-year">Год</option>
+            <option value="title" data-template-type="template-title">Название</option>
+            <option value="viewed" data-template-type="template-viewed">Просмотрено?</option>
+        </select>
+    </div>
+    <div class="template template-bind">
+        <span>bind от:</span>
+        <input type="text" name="binder-min">
+        <span>до</span>
+        <input type="text" name="binder-max">
+    </div>
+    <div class="template template-year">
+        <span>год от:</span>
+        <input type="text" name="year-min">
+        <span>до</span>
+        <input type="text" name="year-max">
+    </div>
+    <div class="template template-title">
+        <span>название</span>
+        <select name="title-condition">
+            <option value="contains">contains</option>
+            <option value="starts-with">starts with</option>
+            <option value="ends-with">ends with</option>
+            <option value="equals">is exactly</option>
+        </select>
+        <input type="text" name="title">
+    </div>
+    <div class="template template-viewed">
+        <label><input type="radio" name="viewed" value="true" checked="checked"> Yes</label>
+        <label><input type="radio" name="viewed" value="false"> No</label>
+    </div>
+</div>
+<form id="form-filters" action="#">
+    <fieldset>
+        <legend>Filters</legend>
+        <div id="filters"></div>
+        <div id="buttons-wrapper">
+            <input type="button" id="filter-add" value="Добавить фильтр"/>
+            <input type="button" id="btn-test" value="Тест"/>
+            <input type="button" id="filter-apply" value="Применить фильтры"/>
+        </div>
+    </fieldset>
+
+</form>
+<table id="table-result">
+    <tr>
+        <th>title</th>
+        <th>year</th>
+        <th>binder</th>
+        <th>page</th>
+        <th>slot</th>
+        <th>viewed</th>
+    </tr>
+</table>
+
+</html>

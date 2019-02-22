@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://yastatic.net/jquery/3.3.1/jquery.min.js"></script>
+    <script>
+        $(function () {
+            var movies;
+            $.getJSON('movies.json', function (data) {
+                movies = data;
+                $(document).trigger('moviesLoaded');
+            });
+            $(document).on('moviesLoaded',function () {
+                alert()
+
+            })
+        })
+    </script>
+</head>
+<body>
+    <div class="templates">
+        <div class="template filter-chooser">
+            <input type="button" class="filter-remover" value="X">
+            <select name="filter" class="filter-type">
+                <option value="" data-template-type="" selected="selected">
+                    Выберете фильтр
+                </option>
+                <option value="title" data-template-type="template-title">
+                    Название DVD
+                </option>
+                <option value="binder" data-template-type="template-binder">
+                    Биндер
+                </option>
+                <option value="year" data-template-type="template-year">
+                    Дата выпуска
+                </option>
+                <option value="viewed" data-template-type="template-viewed">
+                    Просмотрено?
+                </option>
+            </select>
+        </div>
+
+        <div class="template template-title">
+            <select name="title-condition">
+                <option value="contains">содержит</option>
+                <option value="starts-with">начинается с</option>
+                <option value="ends-with">заканчивается</option>
+                <option value="equal">в точности</option>
+            </select>
+            <input type="text" name="title">
+        </div>
+
+        <div class="template template-binder">
+            <input type="text" name="binder-min" class="numeric">
+            <span>до</span>
+            <input type="text" name="binder-max" class="numeric">
+        </div>
+
+        <div class="template template-year">
+            <input type="text" max="year-min" class="date">
+            <span>до</span>
+            <input type="text" max="year-max" class="date">
+        </div>
+
+        <div class="template template-viewed">
+            <label><input type="radio" name="viewed" value="true" checked="checked">Да</label>
+            <label><input type="radio" name="viewed" value="false">Нет</label>
+        </div>
+    </div>
+
+
+    <h1>Локатор Дисков</h1>
+    <form id="form-filters" action="#">
+        <fieldset>
+            <legend>Фильтры</legend>
+            <div id="filters">
+            </div>
+            <div class="buttons-wrapper">
+                <input type="button" id="filter-add" value="Добавить фильтр">
+                <input type="submit" id="filter-apply" value="Применить фильтры">
+            </div>
+        </fieldset>
+    </form>
+    <div id="panel-results">
+        <table id="results">
+            <tr>
+                <th>Название</th>
+                <th>Год</th>
+                <th>Биндер</th>
+                <th>Страница</th>
+                <th>Слот</th>
+                <th>Просмотрено</th>
+
+            </tr>
+        </table>
+    </div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

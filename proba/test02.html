@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script>
+
+        $(function () {
+            var $filters = $('#filters');
+            var movies;
+            $.getJSON('movies.json', function (data) {
+                movies = data;
+                $(document).trigger('moviesLoaded');
+            });
+            $(document).on('moviesLoaded',function () {
+
+            })
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////
+            $('#button-test').click(function () {
+                var yearMin = parseInt($('div.filter-year').find('input[name="year-min"]').val(),10);
+                var yearMax = parseInt($('div.filter-year').find('input[name="year-max"]').val(),10);
+                alert(yearMin+"    :    "+yearMax)
+            });
+
+            $('#filter-apply').click(function () {
+                var yearMin = parseInt($('div.filter-year').find('input[name="year-min"]').val(),10);
+                var yearMax = parseInt($('div.filter-year').find('input[name="year-max"]').val(),10);
+
+                var result = $.grep(movies,function (element,indx) {
+                    return (isNaN(yearMin) || element.year >= yearMin) && (isNaN(yearMax) || element.year <= yearMax);
+
+                })
+                alert(result.length);
+
+            });
+            
+
+            $('#filter-add').click(function () {
+                $('div.template.filter-chooser')
+                    .clone()
+                    .removeClass('template')
+                    // .addClass('filter-year')
+                    .appendTo($filters);
+            });
+            
+            $('#filters').on('click','input[type="button"]',function (event) {
+                // alert(event.target);
+                $(event.target).parent().remove();
+            })
+            $('#filters').on('change', 'select[name="filter"]', function (event) {
+                var selType = $(':selected', event.target).data('template-type');
+                $('div.template.' + selType + '')
+                    .removeClass()
+                    .addClass('filrer-' + selType)
+                    .clone()
+                    .appendTo($(event.target).parent());
+
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="templates">
+        <div class="template filter-chooser">
+            <input type="button" class="filter-remover" value="X" />
+            <select name="filter" class="filter-type">
+                <option value="" data-template-type="" selected="selected">Choose a filter</option>
+                <option value="title" data-template-type="template-title">DVD Title</option>
+                <option value="binder" data-template-type="template-binder">Binder</option>
+                <option value="year" data-template-type="template-year">Release Date</option>
+                <option value="viewed" data-template-type="template-viewed">Viewed?</option>
+            </select>
+
+        </div>
+
+        <div class="template template-year">
+            <input type="text" name="year-min" class="date">
+            <span>до</span>
+            <input type="text" name="year-max" class="date">
+        </div>
+
+        <div class="template template-binder">
+            <input type="text" name="binder-min" class="numeric">
+            <span>до</span>
+            <input type="text" name="binder-max" class="numeric">
+        </div>
+
+    </div>
+
+    <form id="form-filters" action="#">
+        <fieldset>
+            <legend>Filters</legend>
+            <div id="filters">
+            </div>
+            <div class="buttons-wrapper">
+                <input type="button" id="filter-add" value="Add Filter" />
+                <input type="button" id="button-test" value="TEST" />
+                <input type="button" id="filter-apply" value="Apply Filters"/>
+            </div>
+        </fieldset>
+    </form>
+</body>
+</html>

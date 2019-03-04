@@ -1,0 +1,55 @@
+.aaa {
+    grid-area: aaa;
+    background: #ff8b46;
+    font-size: 2em;
+}
+.bbb {
+    grid-area: bbb;
+    background: #ceff61;
+    font-size: 1.2em;
+}
+.ccc {
+    grid-area: ccc;
+    background: #6cffb7;
+    font-size: 1.2em;
+}
+.ddd {
+    grid-area: ddd;
+    background: #988aff;
+    font-size: 2em;
+}
+.wrapper {
+    width: 100%;
+    max-width: 960px;
+    margin: 0 auto;
+    display: grid;
+    grid-row-gap: 10px;
+    grid-template-areas: "aaa" "bbb" "ccc" "ddd";
+}
+@media (min-width: 550px) {
+    .wrapper {
+        grid-column-gap: 2em;
+        grid-row-gap: 20px;
+        grid-template-columns: 2fr 4fr;
+        grid-template-areas: "aaa aaa" "bbb ccc" ". ddd";
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,38 @@
+/*.one {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: 200px;
+    grid-gap: 10px;
+
+}*/
+.one {
+    display: grid;
+    grid-gap: 10px;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: 200px;
+    grid-template-areas: "one three three"
+                            "two three three";
+}
+.two {
+    background: red;
+}
+.two:nth-child(1) {
+    /*grid-column-start: 2;
+    grid-column-end: 4;
+    grid-row-start: 1;
+    grid-row-end: 3;*/
+
+    /*grid-column: 2/4;
+    grid-row: 1/3;*/
+
+    /*grid-area: 1/2/3/4; //сверху против часовой стрелки*/
+}
+.two:nth-child(1) {
+    grid-area: one;
+}
+.two:nth-child(1) {
+    grid-area: two;
+}
+.two:nth-child(1) {
+    grid-area: three;
+}

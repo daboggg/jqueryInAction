@@ -6,18 +6,106 @@
     <script src="js/jquery-3.3.1.min.js"></script>
     <script>
         $(function () {
+
             $('#first').click(function () {
                 if ($('#second').is(':hidden')) {
                     $('#second').show(1000);
                 } else {
                     $('#second').hide(1000);
                 }
-            })
-        })
+            });
+            $('#third').click(function () {
+                $('#fourt').toggle();
+            });
+
+            $('#asas').click(function () {
+                $('#azaz').fadeToggle(1000);
+            });
+            $('#qwqw').click(function () {
+                $('#qzqz').fadeTo(1000, 0.5);
+            });
+            $('#aaaa').click(function () {
+                $('#bbbb').slideToggle(1000);
+            });
+            $('#div1').hover(function () {
+                $('#div1').width($('#div1').width() * 2);
+            }, function () {
+                $('#div1').width($('#div1').width() / 2);
+            });
+            var $div = $('#div1');
+            /*$div
+                .css('position', 'relative')
+                .animate({
+                    opacity: 0,
+                    top: $(window).height() - $div.height() - $div.position().top
+                }, 'normal',
+                    function () {
+                    $div.hide();
+                });*/
+            var $div2 = $('#div2');
+            $('#div0').click(function () {
+                var position = $div2.position();
+                $div2
+                    .css({
+                        position: 'absolute',
+                        /*top: position.top,
+                        left: position.left*/
+                    })
+                    .animate({
+                            opacity: 'hide',
+                            width: $div2.width() * 5,
+                            height: $div2.height() * 5,
+                            top: position.top - ($div2.height() * 5 / 2),
+                            left: position.left - ($div2.width() * 5 / 2)
+                        },
+                        'normal'
+                    );
+            });
+        });
+
     </script>
 </head>
 <body>
     <p id="first">Просто жук</p>
     <p id="second">Не просто жук</p>
+    <p id="third">adcadc</p>
+    <p id="fourt">zsczsczscz</p>
+    <p id="asas">asas</p>
+    <p id="azaz">azaz</p>
+    <p id="qwqw">qwqw</p>
+    <p id="qzqz">qzqz</p>
+    <div id="div0" style="width: 50px; height: 50px; background: brown"></div>
+    <br>
+    <div id="div2" style="width: 50px; height: 50px; background: brown"></div>
+    <p id="aaaa">aaaa</p>
+    <p id="bbbb">bbbb</p>
+    <!--<div id="div1" style="width: 50px; height: 50px; background: brown"></div>-->
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
